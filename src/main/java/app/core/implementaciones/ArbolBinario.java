@@ -10,11 +10,10 @@ public class ArbolBinario
     private NodoBinario<Integer> raiz;
     private int modoRepetidos;
 
-
-    public ArbolBinario(int modoRepetidos)
+    //Constructor
+    public ArbolBinario()
     {
         this.raiz = null;
-        this.modoRepetidos = modoRepetidos;
     }
 
     public void insertar(int valor)
@@ -61,45 +60,42 @@ public class ArbolBinario
 
     public String obtenerTipoEquilibrio()
     {
-        if (raiz == null)
-        {
-            return "Vacio";
-        }
-        if (esPerfectamenteEquilibrado(raiz))
-        {
-            return "Perfectamente Equilibrado";
-        }
-        if (esEquilibrado(raiz))
-        {
-            return "Equilibrado (AVL)";
-        }
-
+        if (raiz == null) return "Vacío";
+        if (verificarPerfecto(raiz) != -1) return "Perfectamente Equilibrado";
+        if (verificarEquilibrado(raiz) != -1) return "Equilibrado";
         return "No equilibrado";
     }
 
     //equilibrado si la diferencia subarboles es <= 1
-    private boolean esEquilibrado(NodoBinario<Integer> nodo)
+    private int verificarEquilibrado(NodoBinario<Integer> nodo)
     {
-        if (nodo == null)
-        {
-            return true;
-        }
-        int diff = Math.abs(calcularAltura(nodo.getIzquierdo()) - calcularAltura(nodo.getDerecho()));
-        return diff <= 1 && esEquilibrado(nodo.getIzquierdo()) && esEquilibrado(nodo.getDerecho());
+        if (nodo == null) return 0;
+
+        int hIzq = verificarEquilibrado(nodo.getIzquierdo());
+        if (hIzq == -1) return -1;
+
+        int hDer = verificarEquilibrado(nodo.getDerecho());
+        if (hDer == -1) return -1;
+
+        if (Math.abs(hIzq - hDer) > 1) return -1; // El nodo actual rompe el equilibrio
+
+        return 1 + Math.max(hIzq, hDer);
     }
 
     // Es perfecto si todos los niveles estan llenos
-    private boolean esPerfectamenteEquilibrado(NodoBinario<Integer> nodo)
-    {
-        if (nodo == null)
-        {
-            return true;
-        }
-        int hIzq = calcularAltura(nodo.getIzquierdo());
-        int hDer = calcularAltura(nodo.getDerecho());
-        return hIzq == hDer && esPerfectamenteEquilibrado(nodo.getIzquierdo()) && esPerfectamenteEquilibrado(nodo.getDerecho());
-    }
+    private int verificarPerfecto(NodoBinario<Integer> nodo) {
+        if (nodo == null) return 0;
 
+        int hIzq = verificarPerfecto(nodo.getIzquierdo());
+        if (hIzq == -1) return -1;
+
+        int hDer = verificarPerfecto(nodo.getDerecho());
+        if (hDer == -1) return -1;
+
+        if (hIzq != hDer) return -1; // Para ser perfecto, izquierda y derecha DEBEN ser iguales
+
+        return 1 + hIzq;
+    }
     //Getters
     public NodoBinario<Integer> getRaiz() {
         return raiz;

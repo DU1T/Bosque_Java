@@ -22,6 +22,14 @@
         {
             return dato;
         }
+        public int getFrecuencia()
+        {
+            return frecuencia;
+        }
+        public void setFrecuencia(int frecuencia)
+        {
+            this.frecuencia = frecuencia;
+        }
         public void setDato(T dato)
         {
             this.dato = dato;
