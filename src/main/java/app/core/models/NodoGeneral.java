@@ -13,6 +13,7 @@
         //Constructor
         public NodoGeneral(T dato) {
             this.dato = dato;
+            this.frecuencia = 1;
             this.hijos = new ArrayList<>();
         }
 

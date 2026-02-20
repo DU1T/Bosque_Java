@@ -1,14 +1,13 @@
 package app.core.implementaciones;
 
 import app.core.models.NodoBinario;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ArbolBinario
 {
     //Atributos
     private NodoBinario<Integer> raiz;
-    private int modoRepetidos;
+    private boolean esBalanceado;
+    private boolean esPerfecto;
 
     //Constructor
     public ArbolBinario()
@@ -58,43 +57,38 @@ public class ArbolBinario
         return 1 + Math.max(calcularAltura(nodo.getIzquierdo()), calcularAltura(nodo.getDerecho()));
     }
 
-    public String obtenerTipoEquilibrio()
-    {
-        if (raiz == null) return "Vacío";
-        if (verificarPerfecto(raiz) != -1) return "Perfectamente Equilibrado";
-        if (verificarEquilibrado(raiz) != -1) return "Equilibrado";
+    public String obtenerTipoEquilibrio() {
+
+        if (raiz == null)return "Vacío";
+
+        esBalanceado = true;
+        esPerfecto = true;
+
+        analizar(raiz);
+
+        if (esPerfecto) return "Perfectamente Equilibrado";
+        else if (esBalanceado) return "Equilibrado";
+
         return "No equilibrado";
     }
 
-    //equilibrado si la diferencia subarboles es <= 1
-    private int verificarEquilibrado(NodoBinario<Integer> nodo)
-    {
-        if (nodo == null) return 0;
+    private int analizar(NodoBinario<Integer> nodo) {
 
-        int hIzq = verificarEquilibrado(nodo.getIzquierdo());
-        if (hIzq == -1) return -1;
+        if (nodo == null)
+            return 0;
 
-        int hDer = verificarEquilibrado(nodo.getDerecho());
-        if (hDer == -1) return -1;
+        int hIzq = analizar(nodo.getIzquierdo());
+        int hDer = analizar(nodo.getDerecho());
 
-        if (Math.abs(hIzq - hDer) > 1) return -1; // El nodo actual rompe el equilibrio
+        // Verificar equilibrio
+        if (Math.abs(hIzq - hDer) > 1)
+            esBalanceado = false;
+
+        // Verificar perfeccion
+        if (hIzq != hDer)
+            esPerfecto = false;
 
         return 1 + Math.max(hIzq, hDer);
-    }
-
-    // Es perfecto si todos los niveles estan llenos
-    private int verificarPerfecto(NodoBinario<Integer> nodo) {
-        if (nodo == null) return 0;
-
-        int hIzq = verificarPerfecto(nodo.getIzquierdo());
-        if (hIzq == -1) return -1;
-
-        int hDer = verificarPerfecto(nodo.getDerecho());
-        if (hDer == -1) return -1;
-
-        if (hIzq != hDer) return -1; // Para ser perfecto, izquierda y derecha DEBEN ser iguales
-
-        return 1 + hIzq;
     }
     //Getters
     public NodoBinario<Integer> getRaiz() {
