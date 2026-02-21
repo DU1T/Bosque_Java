@@ -5,8 +5,7 @@ import java.util.*;
 
 public class ManejadorCSV
 {
-    public static List<Integer> leerArchivo(String ruta)
-    {
+    public static List<Integer> leer(String ruta) {
 
         List<Integer> valores = new ArrayList<>();
 
@@ -15,7 +14,7 @@ public class ManejadorCSV
             String linea;
 
             while ((linea = br.readLine()) != null) {
-                valores.addAll(ParserLista.convertir(linea));
+                valores.addAll(ParserEnteros.desdeTexto(linea));
             }
 
         } catch (IOException e) {
