@@ -2,6 +2,10 @@ package app.core.implementaciones;
 
 import app.core.models.NodoBinario;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class ArbolBinario
 {
     //Atributos
@@ -19,7 +23,35 @@ public class ArbolBinario
     {
         raiz = insertarRecursivo(raiz, valor);
     }
+    public void insertarDesdeLista(String valores) {
 
+        if (valores == null || valores.isEmpty()) return;
+
+        String[] partes = valores.split(",");
+
+        for (String parte : partes) {
+            try {
+                int numero = Integer.parseInt(parte.trim());
+                insertar(numero);
+            } catch (NumberFormatException e) {
+                System.out.println("Valor invalido: " + parte);
+            }
+        }
+    }
+    public void insertarDesdeCSV(String rutaArchivo) {
+
+        try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
+
+            String linea;
+
+            while ((linea = br.readLine()) != null) {
+                insertarDesdeLista(linea);
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error leyendo archivo: " + e.getMessage());
+        }
+    }
     private NodoBinario<Integer> insertarRecursivo(NodoBinario<Integer> actual, int valor)
     {
         if (actual == null)

@@ -1,6 +1,10 @@
 package app.core.implementaciones;
 
 import app.core.models.NodoGeneral;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 public class ArbolGeneral
@@ -63,6 +67,41 @@ public class ArbolGeneral
             }
 
             cola.addAll(actual.getHijos());
+        }
+    }
+    public void insertarDesdeLista(String valores, boolean balanceado, Integer padre) {
+
+        if (valores == null || valores.isEmpty()) return;
+
+        String[] partes = valores.split(",");
+
+        for (String parte : partes) {
+
+            try {
+                int numero = Integer.parseInt(parte.trim());
+
+                if (balanceado)
+                    insertarBalanceado(numero);
+                else
+                    insertar(numero, padre);
+
+            } catch (NumberFormatException e) {
+                System.out.println("Valor invalido: " + parte);
+            }
+        }
+    }
+    public void insertarDesdeCSV(String rutaArchivo, boolean balanceado, Integer padre) {
+
+        try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
+
+            String linea;
+
+            while ((linea = br.readLine()) != null) {
+                insertarDesdeLista(linea, balanceado, padre);
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error leyendo archivo: " + e.getMessage());
         }
     }
     //Buscar
