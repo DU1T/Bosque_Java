@@ -8,13 +8,11 @@
     {
         //Atributos
         private T dato;
-        private int frecuencia;
         private List<NodoGeneral<T>> hijos;
 
         //Constructor
         public NodoGeneral(T dato) {
             this.dato = dato;
-            this.frecuencia = 1;
             this.hijos = new ArrayList<>();
         }
 
@@ -23,14 +21,6 @@
         public T getDato()
         {
             return dato;
-        }
-        public int getFrecuencia()
-        {
-            return frecuencia;
-        }
-        public void setFrecuencia(int frecuencia)
-        {
-            this.frecuencia = frecuencia;
         }
         public void setDato(T dato)
         {

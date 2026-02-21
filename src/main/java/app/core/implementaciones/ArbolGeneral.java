@@ -9,12 +9,15 @@ public class ArbolGeneral
     private NodoGeneral<Integer> raiz;
     private boolean esBalanceado;
     private boolean esPerfecto;
+    private int maxHijos = 3;
 
     //Constructor
     public ArbolGeneral() {
         this.raiz = null;
     }
-
+    public void setMaxHijos(int maxHijos) {
+        this.maxHijos = maxHijos;
+    }
     //Metodos
     //Insertar
     //Si padre es null, es la raiz.
@@ -32,9 +35,8 @@ public class ArbolGeneral
         NodoGeneral<Integer> existente = resultado.getExistente();
         NodoGeneral<Integer> padre = resultado.getPadre();
 
-        if (existente != null)
+        if (existente != null) //No duplicados
         {
-            existente.setFrecuencia(existente.getFrecuencia() + 1);
             return;
         }
 
@@ -58,7 +60,7 @@ public class ArbolGeneral
             NodoGeneral<Integer> actual = cola.poll();
 
             // Si este nodo tiene menos hijos que un limite (ej: 3 hijos maximo)
-            if (actual.getHijos().size() < 3) {
+            if (actual.getHijos().size() < maxHijos) {
                 actual.agregarHijo(new NodoGeneral<>(valor));
                 return;
             }
@@ -191,6 +193,126 @@ public class ArbolGeneral
         }
 
         return maxH + 1;
+    }
+
+    public boolean eliminar(Integer valor, boolean reorganizar)
+    {
+
+        if (raiz == null) return false;
+
+        // Caso especial: eliminar la raiz
+        if (raiz.getDato().equals(valor))
+        {
+
+            if (!reorganizar) {
+                raiz = null; // poda total
+            } else {
+                if (raiz.getHijos().isEmpty()) {
+                    raiz = null;
+                } else {
+                    // Elegimos el primer hijo como nueva raiz
+                    NodoGeneral<Integer> nuevaRaiz = raiz.getHijos().get(0);
+
+                    // Agregar los demas hijos como hijos de la nueva raiz
+                    for (int i = 1; i < raiz.getHijos().size(); i++) {
+                        nuevaRaiz.agregarHijo(raiz.getHijos().get(i));
+                    }
+
+                    raiz = nuevaRaiz;
+                }
+            }
+
+            return true;
+        }
+
+        return eliminarRecursivo(raiz, valor, reorganizar);
+    }
+    private boolean eliminarRecursivo(
+            NodoGeneral<Integer> actual,
+            Integer valor,
+            boolean reorganizar)
+    {
+
+        for (Iterator<NodoGeneral<Integer>> it = actual.getHijos().iterator(); it.hasNext();) {
+
+            NodoGeneral<Integer> hijo = it.next();
+
+            if (hijo.getDato().equals(valor)) {
+
+                if (!reorganizar)
+                {
+                    // PODAR
+                    it.remove();
+                }
+                else
+                {
+                    // REORGANIZAR
+                    it.remove();
+
+                    for (NodoGeneral<Integer> nieto : hijo.getHijos()) {
+                        actual.agregarHijo(nieto);
+                    }
+                }
+
+                return true;
+            }
+
+            if (eliminarRecursivo(hijo, valor, reorganizar)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public Map<Integer, List<Integer>> obtenerNiveles() {
+
+        Map<Integer, List<Integer>> niveles = new LinkedHashMap<>();
+
+        if (raiz == null) return niveles;
+
+        Queue<NodoGeneral<Integer>> cola = new LinkedList<>();
+        Queue<Integer> nivelesCola = new LinkedList<>();
+
+        cola.add(raiz);
+        nivelesCola.add(0);
+
+        while (!cola.isEmpty()) {
+
+            NodoGeneral<Integer> actual = cola.poll();
+            int nivel = nivelesCola.poll();
+
+            niveles.putIfAbsent(nivel, new ArrayList<>());
+            niveles.get(nivel).add(actual.getDato());
+
+            for (NodoGeneral<Integer> hijo : actual.getHijos()) {
+                cola.add(hijo);
+                nivelesCola.add(nivel + 1);
+            }
+        }
+
+        return niveles;
+    }
+    //Busqueda publica
+    public NodoGeneral<Integer> buscar(Integer valor) {
+        return buscarRecursivo(raiz, valor);
+    }
+
+    private NodoGeneral<Integer> buscarRecursivo(
+            NodoGeneral<Integer> actual,
+            Integer valor) {
+
+        if (actual == null) return null;
+
+        if (actual.getDato().equals(valor)) {
+            return actual;
+        }
+
+        for (NodoGeneral<Integer> hijo : actual.getHijos()) {
+            NodoGeneral<Integer> encontrado = buscarRecursivo(hijo, valor);
+            if (encontrado != null) return encontrado;
+        }
+
+        return null;
     }
 
     public NodoGeneral<Integer> getRaiz()
