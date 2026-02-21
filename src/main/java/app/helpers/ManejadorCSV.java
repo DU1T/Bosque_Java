@@ -5,7 +5,7 @@ import java.util.*;
 
 public class ManejadorCSV
 {
-    public static List<Integer> leer(String ruta) {
+    public static List<Integer> leerEnteros(String ruta) {
 
         List<Integer> valores = new ArrayList<>();
 
