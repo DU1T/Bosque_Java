@@ -3,6 +3,7 @@ package app.core.implementaciones;
 import app.core.models.NodoBinario;
 import app.helpers.ConvertidorExp; // Importamos tu nueva clase
 import java.util.Stack;
+import java.util.*;
 
 public class ArbolExpresion
 {
@@ -80,6 +81,40 @@ public class ArbolExpresion
         if (nodo == null) return 0;
         return 1 + Math.max(calcularAltura(nodo.getIzquierdo()), calcularAltura(nodo.getDerecho()));
     }
+    public Map<Integer, List<String>> obtenerNiveles() {
+
+        Map<Integer, List<String>> niveles = new LinkedHashMap<>();
+
+        if (raiz == null) return niveles;
+
+        Queue<NodoBinario<String>> cola = new LinkedList<>();
+        Queue<Integer> nivelCola = new LinkedList<>();
+
+        cola.add(raiz);
+        nivelCola.add(0);
+
+        while (!cola.isEmpty()) {
+
+            NodoBinario<String> actual = cola.poll();
+            int nivel = nivelCola.poll();
+
+            niveles.putIfAbsent(nivel, new ArrayList<>());
+            niveles.get(nivel).add(actual.getDato());
+
+            if (actual.getIzquierdo() != null) {
+                cola.add(actual.getIzquierdo());
+                nivelCola.add(nivel + 1);
+            }
+
+            if (actual.getDerecho() != null) {
+                cola.add(actual.getDerecho());
+                nivelCola.add(nivel + 1);
+            }
+        }
+
+        return niveles;
+    }
+
 
     public NodoBinario<String> getRaiz() { return raiz; }
 }
