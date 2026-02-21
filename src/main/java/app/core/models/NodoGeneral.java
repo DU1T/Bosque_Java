@@ -1,6 +1,7 @@
     package app.core.models;
 
     import java.util.ArrayList;
+    import java.util.Collections;
     import java.util.List;
 
     public class NodoGeneral<T> //T de Type
@@ -36,11 +37,13 @@
             this.dato = dato;
         }
         //Hijos
-        public List<NodoGeneral<T>> getHijos()
+        /*public List<NodoGeneral<T>> getHijos()
         {
             return hijos;
+        }*/
+        public List<NodoGeneral<T>> getHijos() {
+            return Collections.unmodifiableList(hijos);
         }
-
         public void agregarHijo(NodoGeneral<T> hijo)
         {
             if (hijo != null) {

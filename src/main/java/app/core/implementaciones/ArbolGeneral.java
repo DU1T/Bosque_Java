@@ -26,10 +26,10 @@ public class ArbolGeneral
             return;
         }
 
-        NodoGeneral<Integer>[] resultado = buscarExistenteYPadre(raiz, valor, valorPadre);
+        ResultadoBusqueda resultado = buscarExistenteYPadre(raiz, valor, valorPadre);
 
-        NodoGeneral<Integer> existente = resultado[0];
-        NodoGeneral<Integer> padre = resultado[1];
+        NodoGeneral<Integer> existente = resultado.getExistente();
+        NodoGeneral<Integer> padre = resultado.getPadre();
 
         if (existente != null)
         {
@@ -42,45 +42,90 @@ public class ArbolGeneral
             padre.agregarHijo(new NodoGeneral<>(valor));
         }
     }
+    public void insertarBalanceado(Integer valor) {
 
+        if (raiz == null) {
+            raiz = new NodoGeneral<>(valor);
+            return;
+        }
+
+        Queue<NodoGeneral<Integer>> cola = new LinkedList<>();
+        cola.add(raiz);
+
+        while (!cola.isEmpty()) {
+
+            NodoGeneral<Integer> actual = cola.poll();
+
+            // Si este nodo tiene menos hijos que un limite (ej: 3 hijos maximo)
+            if (actual.getHijos().size() < 3) {
+                actual.agregarHijo(new NodoGeneral<>(valor));
+                return;
+            }
+
+            cola.addAll(actual.getHijos());
+        }
+    }
     //Buscar
-    private NodoGeneral<Integer>[] buscarExistenteYPadre(
+    private static class ResultadoBusqueda {
+
+        private NodoGeneral<Integer> existente;
+        private NodoGeneral<Integer> padre;
+
+        public ResultadoBusqueda(NodoGeneral<Integer> existente,
+                                 NodoGeneral<Integer> padre) {
+            this.existente = existente;
+            this.padre = padre;
+        }
+
+        public NodoGeneral<Integer> getExistente() {
+            return existente;
+        }
+
+        public NodoGeneral<Integer> getPadre() {
+            return padre;
+        }
+    }
+    private ResultadoBusqueda buscarExistenteYPadre(
             NodoGeneral<Integer> actual,
             Integer valor,
             Integer valorPadre) {
 
+        if (actual == null) {
+            return new ResultadoBusqueda(null, null);
+        }
+
         NodoGeneral<Integer> existente = null;
         NodoGeneral<Integer> padre = null;
 
-        if (actual == null)
-        {
-            return new NodoGeneral[]{null, null};
-        }
-
-        if (actual.getDato().equals(valor))
-        {
+        if (actual.getDato().equals(valor)) {
             existente = actual;
         }
 
-        if (actual.getDato().equals(valorPadre))
-        {
+        if (actual.getDato().equals(valorPadre)) {
             padre = actual;
         }
 
-        for (NodoGeneral<Integer> hijo : actual.getHijos())
-        {
+        for (NodoGeneral<Integer> hijo : actual.getHijos()) {
 
-            NodoGeneral<Integer>[] resultado =
-                    buscarExistenteYPadre(hijo, valor, valorPadre);
+            ResultadoBusqueda resultado = buscarExistenteYPadre(hijo, valor, valorPadre);
 
-            if (resultado[0] != null) existente = resultado[0];
+            if (resultado.getExistente() != null)
+            {
+                existente = resultado.getExistente();
+            }
 
-            if (resultado[1] != null) padre = resultado[1];
+            if (resultado.getPadre() != null)
+            {
+                padre = resultado.getPadre();
+            }
+            if (existente != null && padre != null)
+            {
+                break;
+            }
         }
 
-        return new NodoGeneral[]{existente, padre};
+        return new ResultadoBusqueda(existente, padre);
     }
-
     //Altura
     public int getAltura() {
         return calcularAltura(raiz);
