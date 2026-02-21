@@ -1,5 +1,9 @@
 package app.core.models;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class NodoBinario<T> //T de Type
 {
     //Atributos

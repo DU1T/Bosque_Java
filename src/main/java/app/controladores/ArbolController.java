@@ -1,9 +1,11 @@
 package app.controladores;
 
 import app.core.implementaciones.*;
+import app.core.recorridos.*;
 import app.helpers.ParserEnteros;
 import app.helpers.ManejadorCSV;
 import java.util.List;
+import java.util.Map;
 
 public class ArbolController
 {
@@ -74,6 +76,33 @@ public class ArbolController
                 break;
         }
     }
+    public void eliminarBinario(int valor) {
+        arbolBinario.eliminar(valor);
+    }
+
+    public boolean buscarBinario(int valor) {
+        return arbolBinario.buscar(valor) != null;
+    }
+
+    public List<Integer> getPreordenBinario() {
+        return RecorridosBinario.preorden(arbolBinario.getRaiz());
+    }
+
+    public List<Integer> getInordenBinario() {
+        return RecorridosBinario.inorden(arbolBinario.getRaiz());
+    }
+
+    public List<Integer> getPostordenBinario() {
+        return RecorridosBinario.postorden(arbolBinario.getRaiz());
+    }
+
+    public int getAlturaBinario() {
+        return arbolBinario.getAltura();
+    }
+
+    public Map<Integer, List<Integer>> getNivelesBinario() {
+        return arbolBinario.obtenerNiveles();
+    }
 
     // GENERAL
     private void procesarGeneral(TipoEntrada tipoEntrada, String dato, String padre)
@@ -99,6 +128,42 @@ public class ArbolController
                 break;
         }
     }
+    public List<Integer> getPreordenGeneral() {
+        return RecorridosGeneral.preorden(arbolGeneral.getRaiz());
+    }
+
+    public List<Integer> getPostordenGeneral() {
+        return RecorridosGeneral.postorden(arbolGeneral.getRaiz());
+    }
+
+    public int getAlturaGeneral() {
+        return arbolGeneral.getAltura();
+    }
+
+    public Map<Integer, List<Integer>> getNivelesGeneral() {
+        return arbolGeneral.obtenerNiveles();
+    }
+
+    //Expresion
+    public List<String> getPreordenExpresion() {
+        return RecorridosExpresion.preorden(arbolExpresion.getRaiz());
+    }
+
+    public List<String> getPostordenExpresion() {
+        return RecorridosExpresion.postorden(arbolExpresion.getRaiz());
+    }
+
+    public String getInordenExpresion() {
+        return RecorridosExpresion.inordenConParentesis(arbolExpresion.getRaiz());
+    }
+
+    public int getAlturaExpresion() {
+        return arbolExpresion.getAltura();
+    }
+
+    public double evaluarExpresion() {
+        return arbolExpresion.evaluar();
+    }
 
     // GETTERS
     public ArbolBinario getArbolBinario() {
@@ -111,5 +176,8 @@ public class ArbolController
 
     public ArbolExpresion getArbolExpresion() {
         return arbolExpresion;
+    }
+    public TipoArbol getTipoArbol() {
+        return tipoArbol;
     }
 }
