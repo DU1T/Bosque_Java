@@ -4,6 +4,9 @@ import app.controladores.TipoEntrada;
 import app.core.models.NodoGeneral;
 import app.controladores.ArbolController;
 import app.helpers.ParserEnteros;
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -14,8 +17,7 @@ import java.io.File;
 import java.util.*;
 import java.util.List;
 
-public class ArbolGeneralForm
-{
+public class ArbolGeneralForm {
     public JPanel PanelPrincipal;
     private JLabel LblTitulo;
     private JLabel LblSubtitulo;
@@ -35,8 +37,7 @@ public class ArbolGeneralForm
     private JButton btnLimpiar;
     private ArbolController controller;
 
-    public ArbolGeneralForm(ArbolController controller)
-    {
+    public ArbolGeneralForm(ArbolController controller) {
         this.controller = controller;
         PanelPrincipal.setPreferredSize(new Dimension(900, 600));
         ViewArbol.setModel(null);
@@ -56,8 +57,7 @@ public class ArbolGeneralForm
         return controller.getArbolGeneral().getRaiz() == null;
     }
 
-    private void insertarDatos()
-    {
+    private void insertarDatos() {
 
         String texto = txtDatos.getText().trim();
 
@@ -140,8 +140,7 @@ public class ArbolGeneralForm
             );
         }
 
-        if (!huboRepetidos)
-        {
+        if (!huboRepetidos) {
             mostrarConsola("Valores agregados correctamente.");
         }
 
@@ -149,8 +148,7 @@ public class ArbolGeneralForm
         txtDatos.setText("");
     }
 
-    private void buscarDato()
-    {
+    private void buscarDato() {
 
         Integer valor = obtenerEnteroSeguro(txtDatos.getText());
 
@@ -170,6 +168,7 @@ public class ArbolGeneralForm
         resaltarNodo(valor);
         mostrarConsola("Valor encontrado: " + valor);
     }
+
     private Integer obtenerEnteroSeguro(String texto) {
 
         if (texto == null || texto.isBlank()) {
@@ -182,6 +181,7 @@ public class ArbolGeneralForm
             return null;
         }
     }
+
     private void resaltarNodo(int valor) {
 
         if (ViewArbol.getModel() == null) return;
@@ -205,34 +205,34 @@ public class ArbolGeneralForm
             }
         }
     }
-    void cargarCSV()
-    {
+
+    void cargarCSV() {
 
         JFileChooser chooser = new JFileChooser();
 
-            int opcion = chooser.showOpenDialog(PanelPrincipal);
+        int opcion = chooser.showOpenDialog(PanelPrincipal);
 
-            if (opcion == JFileChooser.APPROVE_OPTION) {
+        if (opcion == JFileChooser.APPROVE_OPTION) {
 
-                File archivo = chooser.getSelectedFile();
+            File archivo = chooser.getSelectedFile();
 
-                if (!archivo.getName().toLowerCase().endsWith(".csv")) {
-                    mostrarConsola("Seleccione un archivo CSV valido.");
-                    return;
-                }
-
-                controller.procesarEntrada(
-                        TipoEntrada.CSV,
-                        archivo.getAbsolutePath(),
-                        null
-                );
-
-                actualizarArbol();
-                mostrarConsola("CSV cargado correctamente.");
+            if (!archivo.getName().toLowerCase().endsWith(".csv")) {
+                mostrarConsola("Seleccione un archivo CSV valido.");
+                return;
             }
+
+            controller.procesarEntrada(
+                    TipoEntrada.CSV,
+                    archivo.getAbsolutePath(),
+                    null
+            );
+
+            actualizarArbol();
+            mostrarConsola("CSV cargado correctamente.");
+        }
     }
-    private void eliminarNodo()
-    {
+
+    private void eliminarNodo() {
         boolean eliminado = false;
 
         if (arbolVacio()) {
@@ -250,8 +250,7 @@ public class ArbolGeneralForm
                 mostrarConsola("Ingrese un numero valido.");
                 return;
             }
-        }
-        else {
+        } else {
             TreePath seleccion = ViewArbol.getSelectionPath();
 
             if (seleccion != null) {
@@ -274,8 +273,7 @@ public class ArbolGeneralForm
             return;
         }
 
-        if (nodo.esHoja())
-        {
+        if (nodo.esHoja()) {
 
             int confirm = JOptionPane.showConfirmDialog(
                     PanelPrincipal,
@@ -288,8 +286,7 @@ public class ArbolGeneralForm
                 controller.getArbolGeneral().eliminar(valor, false);
                 eliminado = true;
             }
-        }
-        else {
+        } else {
 
             Object[] opciones = {"Podar rama", "Eliminar solo nodo"};
 
@@ -313,14 +310,13 @@ public class ArbolGeneralForm
             eliminado = true;
         }
 
-        if (eliminado)
-        {
+        if (eliminado) {
             actualizarArbol();
             mostrarConsola("Nodo eliminado.");
         }
     }
-    private void obtenerAltura()
-    {
+
+    private void obtenerAltura() {
         if (arbolVacio()) {
             mostrarConsola("El arbol esta vacio.");
             return;
@@ -329,8 +325,7 @@ public class ArbolGeneralForm
         mostrarConsola("Altura del arbol: " + altura);
     }
 
-    private void obtenerNiveles()
-    {
+    private void obtenerNiveles() {
         if (arbolVacio()) {
             mostrarConsola("El arbol esta vacio.");
             return;
@@ -351,8 +346,8 @@ public class ArbolGeneralForm
 
         mostrarConsola(sb.toString());
     }
-    private void iniciarRecorridos()
-    {
+
+    private void iniciarRecorridos() {
         if (arbolVacio()) {
             mostrarConsola("El arbol esta vacio.");
             return;
@@ -375,14 +370,13 @@ public class ArbolGeneralForm
         if (eleccion == 0) {
             mostrarConsola("=== RECORRIDO PREORDEN ===");
             mostrarConsola(controller.getPreordenGeneral().toString());
-        }
-        else if (eleccion == 1) {
+        } else if (eleccion == 1) {
             mostrarConsola("=== RECORRIDO POSTORDEN ===");
             mostrarConsola(controller.getPostordenGeneral().toString());
         }
     }
-    private void limpiarUI()
-    {
+
+    private void limpiarUI() {
 
         int confirm = JOptionPane.showConfirmDialog(
                 PanelPrincipal,
@@ -398,8 +392,8 @@ public class ArbolGeneralForm
             mostrarConsola("El arbol se ha borrado.");
         }
     }
-    private void obtenerEquilibrio()
-    {
+
+    private void obtenerEquilibrio() {
         if (arbolVacio()) {
             mostrarConsola("El arbol esta vacio.");
             return;
@@ -407,6 +401,7 @@ public class ArbolGeneralForm
         String tipo = controller.getArbolGeneral().obtenerTipoEquilibrio();
         mostrarConsola("Tipo de equilibrio: " + tipo);
     }
+
     private void actualizarArbol() {
 
         NodoGeneral<Integer> raiz = controller.getArbolGeneral().getRaiz();
@@ -441,7 +436,85 @@ public class ArbolGeneralForm
             ViewArbol.expandRow(i);
         }
     }
+
     private void mostrarConsola(String mensaje) {
         txtConsola.append(mensaje + "\n");
     }
+
+    {
+// GUI initializer generated by IntelliJ IDEA GUI Designer
+// >>> IMPORTANT!! <<<
+// DO NOT EDIT OR ADD ANY CODE HERE!
+        $$$setupUI$$$();
+    }
+
+    /**
+     * Method generated by IntelliJ IDEA GUI Designer
+     * >>> IMPORTANT!! <<<
+     * DO NOT edit this method OR call it in your code!
+     *
+     * @noinspection ALL
+     */
+    private void $$$setupUI$$$() {
+        PanelPrincipal = new JPanel();
+        PanelPrincipal.setLayout(new GridLayoutManager(16, 4, new Insets(0, 0, 0, 0), -1, -1));
+        LblTitulo = new JLabel();
+        LblTitulo.setText("Arbol General");
+        PanelPrincipal.add(LblTitulo, new GridConstraints(0, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        LblSubtitulo = new JLabel();
+        LblSubtitulo.setText("Representacion VIsual");
+        PanelPrincipal.add(LblSubtitulo, new GridConstraints(1, 0, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        LblValor = new JLabel();
+        LblValor.setText("Ingresa tus datos:");
+        PanelPrincipal.add(LblValor, new GridConstraints(2, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnInsertar = new JButton();
+        btnInsertar.setText("Agregar");
+        PanelPrincipal.add(btnInsertar, new GridConstraints(4, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        txtDatos = new JTextField();
+        PanelPrincipal.add(txtDatos, new GridConstraints(3, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        btnEliminar = new JButton();
+        btnEliminar.setText("Eliminar Nodo");
+        PanelPrincipal.add(btnEliminar, new GridConstraints(7, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnAltura = new JButton();
+        btnAltura.setText("Calcular Altura");
+        PanelPrincipal.add(btnAltura, new GridConstraints(8, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnNiveles = new JButton();
+        btnNiveles.setText("Niveles");
+        PanelPrincipal.add(btnNiveles, new GridConstraints(9, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnRecorridos = new JButton();
+        btnRecorridos.setText("Recorridos");
+        PanelPrincipal.add(btnRecorridos, new GridConstraints(10, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        lblConsola = new JLabel();
+        lblConsola.setText("Consola");
+        PanelPrincipal.add(lblConsola, new GridConstraints(14, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnEquilibrio = new JButton();
+        btnEquilibrio.setText("Tipo de equilibrio");
+        PanelPrincipal.add(btnEquilibrio, new GridConstraints(11, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnBuscar = new JButton();
+        btnBuscar.setText("Buscar");
+        PanelPrincipal.add(btnBuscar, new GridConstraints(5, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnCargaCSV = new JButton();
+        btnCargaCSV.setText("Cargar .CSV");
+        PanelPrincipal.add(btnCargaCSV, new GridConstraints(6, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JScrollPane scrollPane1 = new JScrollPane();
+        PanelPrincipal.add(scrollPane1, new GridConstraints(15, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        txtConsola = new JTextArea();
+        txtConsola.setEditable(false);
+        scrollPane1.setViewportView(txtConsola);
+        final JScrollPane scrollPane2 = new JScrollPane();
+        PanelPrincipal.add(scrollPane2, new GridConstraints(2, 0, 12, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        ViewArbol = new JTree();
+        scrollPane2.setViewportView(ViewArbol);
+        btnLimpiar = new JButton();
+        btnLimpiar.setText("Limpiar");
+        PanelPrincipal.add(btnLimpiar, new GridConstraints(12, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    public JComponent $$$getRootComponent$$$() {
+        return PanelPrincipal;
+    }
+
 }
