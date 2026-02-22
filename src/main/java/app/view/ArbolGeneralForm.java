@@ -39,6 +39,7 @@ public class ArbolGeneralForm
     {
         this.controller = controller;
         PanelPrincipal.setPreferredSize(new Dimension(900, 600));
+        ViewArbol.setModel(null);
         btnInsertar.addActionListener(e -> insertarDatos());
         txtDatos.addActionListener(e -> insertarDatos());
         btnBuscar.addActionListener(e -> buscarDato());
@@ -49,6 +50,8 @@ public class ArbolGeneralForm
         btnRecorridos.addActionListener(e -> iniciarRecorridos());
         btnLimpiar.addActionListener(e -> limpiarUI());
         btnEquilibrio.addActionListener(e -> obtenerEquilibrio());
+        controller.reset();
+        ViewArbol.setModel(null);
     }
 
     private boolean arbolVacio() {
@@ -72,18 +75,32 @@ public class ArbolGeneralForm
             return;
         }
 
-        // Si no hay raiz aun → el primero es raíz
+        // Si no hay raiz aun → el primero es raiz
         if (controller.getArbolGeneral().getRaiz() == null) {
 
-            controller.procesarEntrada(TipoEntrada.MANUAL,
-                    valores.get(0).toString(), null);
+            Integer raizValor = valores.get(0);
 
-            mostrarConsola("Raiz creada: " + valores.get(0));
+            controller.procesarEntrada(
+                    TipoEntrada.MANUAL,
+                    raizValor.toString(),
+                    null
+            );
+
+            mostrarConsola("Raiz creada: " + raizValor);
 
             valores.remove(0);
-            if (valores.isEmpty())
-            {
-                actualizarArbol();
+
+            actualizarArbol();
+
+            // Seleccionar automáticamente la raíz en el JTree
+            if (ViewArbol.getModel() != null) {
+                DefaultMutableTreeNode root =
+                        (DefaultMutableTreeNode) ViewArbol.getModel().getRoot();
+                TreePath path = new TreePath(root.getPath());
+                ViewArbol.setSelectionPath(path);
+            }
+
+            if (valores.isEmpty()) {
                 txtDatos.setText("");
                 return;
             }
@@ -107,7 +124,17 @@ public class ArbolGeneralForm
             return;
         }
 
+        boolean huboRepetidos = false;
+
         for (Integer v : valores) {
+
+            // Verificar si ya existe
+            if (controller.getArbolGeneral().buscar(v) != null) {
+                mostrarConsola("Valor repetido ignorado: " + v);
+                huboRepetidos = true;
+                continue;
+            }
+
             controller.procesarEntrada(
                     TipoEntrada.MANUAL,
                     v.toString(),
@@ -115,8 +142,12 @@ public class ArbolGeneralForm
             );
         }
 
+        if (!huboRepetidos)
+        {
+            mostrarConsola("Valores agregados correctamente.");
+        }
+
         actualizarArbol();
-        mostrarConsola("Valores agregados correctamente.");
         txtDatos.setText("");
     }
 
@@ -344,14 +375,12 @@ public class ArbolGeneralForm
             return;
         }
         if (eleccion == 0) {
-            mostrarConsola(
-                    controller.getPreordenGeneral().toString()
-            );
+            mostrarConsola("=== RECORRIDO PREORDEN ===");
+            mostrarConsola(controller.getPreordenGeneral().toString());
         }
         else if (eleccion == 1) {
-            mostrarConsola(
-                    controller.getPostordenGeneral().toString()
-            );
+            mostrarConsola("=== RECORRIDO POSTORDEN ===");
+            mostrarConsola(controller.getPostordenGeneral().toString());
         }
     }
     private void limpiarUI()
@@ -367,6 +396,7 @@ public class ArbolGeneralForm
         if (confirm == JOptionPane.YES_OPTION) {
             controller.reset();
             ViewArbol.setModel(null);
+            txtConsola.setText("");
             mostrarConsola("El arbol se ha borrado.");
         }
     }

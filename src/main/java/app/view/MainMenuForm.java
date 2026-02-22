@@ -15,7 +15,7 @@ public class MainMenuForm {
     private JButton btnExit;
 
     public MainMenuForm() {
-        PanelPrincipal.setPreferredSize(new Dimension(900, 600));
+        PanelPrincipal.setPreferredSize(new Dimension(400, 300));
         btnGeneral.addActionListener(e -> abrirGeneral());
         btnBinario.addActionListener(e -> abrirBinario());
         btnExpresiones.addActionListener(e -> abrirExpresion());

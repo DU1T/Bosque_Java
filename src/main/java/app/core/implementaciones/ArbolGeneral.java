@@ -197,24 +197,30 @@ public class ArbolGeneral
 
     public boolean eliminar(Integer valor, boolean reorganizar)
     {
-
         if (raiz == null) return false;
 
-        // Caso especial: eliminar la raiz
+        //Caso especial
         if (raiz.getDato().equals(valor))
         {
-
-            if (!reorganizar) {
-                raiz = null; // poda total
-            } else {
-                if (raiz.getHijos().isEmpty()) {
+            if (!reorganizar)
+            {
+                // Poda total
+                raiz = null;
+            }
+            else
+            {
+                if (raiz.getHijos().isEmpty())
+                {
                     raiz = null;
-                } else {
-                    // Elegimos el primer hijo como nueva raiz
+                }
+                else
+                {
+                    // Primer hijo será el sucesor
                     NodoGeneral<Integer> nuevaRaiz = raiz.getHijos().get(0);
 
-                    // Agregar los demas hijos como hijos de la nueva raiz
-                    for (int i = 1; i < raiz.getHijos().size(); i++) {
+                    // Los demás hijos pasan a ser hijos del sucesor
+                    for (int i = 1; i < raiz.getHijos().size(); i++)
+                    {
                         nuevaRaiz.agregarHijo(raiz.getHijos().get(i));
                     }
 
@@ -232,32 +238,43 @@ public class ArbolGeneral
             Integer valor,
             boolean reorganizar)
     {
+        List<NodoGeneral<Integer>> hijos = actual.getHijos();
 
-        for (Iterator<NodoGeneral<Integer>> it = actual.getHijos().iterator(); it.hasNext();) {
+        for (int i = 0; i < hijos.size(); i++)
+        {
+            NodoGeneral<Integer> hijo = hijos.get(i);
 
-            NodoGeneral<Integer> hijo = it.next();
-
-            if (hijo.getDato().equals(valor)) {
-
+            if (hijo.getDato().equals(valor))
+            {
                 if (!reorganizar)
                 {
-                    // PODAR
-                    it.remove();
+                    hijos.remove(i); // PODA
                 }
                 else
                 {
-                    // REORGANIZAR
-                    it.remove();
+                    hijos.remove(i);
 
-                    for (NodoGeneral<Integer> nieto : hijo.getHijos()) {
-                        actual.agregarHijo(nieto);
+                    if (!hijo.getHijos().isEmpty())
+                    {
+                        // Primer hijo como sucesor
+                        NodoGeneral<Integer> sucesor = hijo.getHijos().get(0);
+
+                        // Los demas hijos pasan al sucesor
+                        for (int j = 1; j < hijo.getHijos().size(); j++)
+                        {
+                            sucesor.agregarHijo(hijo.getHijos().get(j));
+                        }
+
+                        // Insertar sucesor en la misma posicion
+                        hijos.add(i, sucesor);
                     }
                 }
 
                 return true;
             }
 
-            if (eliminarRecursivo(hijo, valor, reorganizar)) {
+            if (eliminarRecursivo(hijo, valor, reorganizar))
+            {
                 return true;
             }
         }

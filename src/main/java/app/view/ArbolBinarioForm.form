@@ -104,14 +104,6 @@
           <text value="Tipo de equilibrio"/>
         </properties>
       </component>
-      <component id="799d5" class="javax.swing.JTree" binding="ViewArbol">
-        <constraints>
-          <grid row="2" column="0" row-span="10" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
       <component id="80bb6" class="javax.swing.JButton" binding="btnLimpiar">
         <constraints>
           <grid row="12" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -128,14 +120,32 @@
           <text value="Consola"/>
         </properties>
       </component>
-      <component id="701a" class="javax.swing.JTextArea" binding="txtConsola">
+      <scrollpane id="8c5c5">
         <constraints>
-          <grid row="13" column="0" row-span="1" col-span="4" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
+          <grid row="13" column="0" row-span="1" col-span="4" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
-      </component>
+        <border type="none"/>
+        <children>
+          <component id="701a" class="javax.swing.JTextArea" binding="txtConsola">
+            <constraints/>
+            <properties/>
+          </component>
+        </children>
+      </scrollpane>
+      <scrollpane id="a16e7">
+        <constraints>
+          <grid row="2" column="0" row-span="10" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="799d5" class="javax.swing.JTree" binding="ViewArbol">
+            <constraints/>
+            <properties/>
+          </component>
+        </children>
+      </scrollpane>
     </children>
   </grid>
 </form>
