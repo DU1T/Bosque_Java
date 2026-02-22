@@ -54,6 +54,19 @@ public class ArbolController
                 break;
         }
     }
+    public void reset() {
+        switch (tipoArbol) {
+            case BINARIO:
+                arbolBinario = new ArbolBinario();
+                break;
+            case GENERAL:
+                arbolGeneral = new ArbolGeneral();
+                break;
+            case EXPRESION:
+                arbolExpresion = new ArbolExpresion();
+                break;
+        }
+    }
 
     // BINARIO
     private void procesarBinario(TipoEntrada tipoEntrada, String dato)
@@ -124,6 +137,7 @@ public class ArbolController
 
             case CSV:
                 List<Integer> desdeCSV = ManejadorCSV.leerEnteros(dato);
+                arbolGeneral.setMaxHijos(4);
                 desdeCSV.forEach(arbolGeneral::insertarBalanceado);
                 break;
         }
