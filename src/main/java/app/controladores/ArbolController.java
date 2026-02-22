@@ -94,6 +94,10 @@ public class ArbolController
     {
         return arbolBinario.eliminar(valor);
     }
+    public boolean eliminarBinario(int valor, boolean podar)
+    {
+        return arbolBinario.eliminar(valor, podar);
+    }
 
     public boolean buscarBinario(int valor) {
         return arbolBinario.buscar(valor) != null;

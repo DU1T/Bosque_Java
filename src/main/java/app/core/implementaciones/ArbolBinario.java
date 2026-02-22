@@ -112,7 +112,35 @@ public class ArbolBinario
         raiz = eliminarRecursivo(raiz, valor);
         return true;
     }
+    public boolean eliminar(int valor, boolean podar) {
 
+        if (buscar(valor) == null) return false;
+
+        if (podar) {
+            raiz = eliminarPodando(raiz, valor);
+        } else {
+            raiz = eliminarRecursivo(raiz, valor);
+        }
+
+        return true;
+    }
+    private NodoBinario<Integer> eliminarPodando(NodoBinario<Integer> actual, int valor) {
+
+        if (actual == null) return null;
+
+        if (valor < actual.getDato()) {
+            actual.setIzquierdo(eliminarPodando(actual.getIzquierdo(), valor));
+        }
+        else if (valor > actual.getDato()) {
+            actual.setDerecho(eliminarPodando(actual.getDerecho(), valor));
+        }
+        else {
+            // Poda completa
+            return null;
+        }
+
+        return actual;
+    }
     private NodoBinario<Integer> eliminarRecursivo(NodoBinario<Integer> actual, int valor) {
 
         if (actual == null) return null;

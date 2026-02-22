@@ -39,7 +39,7 @@ public class ArbolBinarioForm
         this.controller = controller;
 
         PanelPrincipal.setPreferredSize(new Dimension(900,600));
-
+        ViewArbol.setModel(null);
         btnInsertar.addActionListener(e -> insertar());
         txtDatos.addActionListener(e -> insertar());
         btnCargaCSV.addActionListener(e -> cargarCSV());
@@ -108,23 +108,85 @@ public class ArbolBinarioForm
             return;
         }
 
-        Integer valor = obtenerEnteroSeguro(txtDatos.getText());
+        Integer valor = null;
+        String texto = txtDatos.getText().trim();
+
+        //Si hay texto escrito
+        if (!texto.isBlank()) {
+            valor = obtenerEnteroSeguro(texto);
+
+            if (valor == null) {
+                mostrar("Ingrese un numero valido.");
+                return;
+            }
+        }
+        //Si no hay texto, usar selección del JTree
+        else {
+            TreePath seleccion = ViewArbol.getSelectionPath();
+
+            if (seleccion != null) {
+                DefaultMutableTreeNode nodo =
+                        (DefaultMutableTreeNode) seleccion.getLastPathComponent();
+
+                String textoNodo = nodo.getUserObject().toString();
+
+                if (textoNodo.contains(" ")) {
+                    textoNodo = textoNodo.substring(0, textoNodo.indexOf(" "));
+                }
+
+                valor = obtenerEnteroSeguro(textoNodo);
+            }
+        }
 
         if (valor == null) {
-            mostrar("Ingrese un numero valido.");
+            mostrar("Ingrese o seleccione un nodo.");
             return;
         }
 
-        boolean eliminado = controller.eliminarBinario(valor);
+        NodoBinario<Integer> nodo = controller.getArbolBinario().buscar(valor);
 
-        if (!eliminado) {
+        if (nodo == null) {
             mostrar("Nodo no encontrado.");
             return;
         }
 
-        actualizarArbol();
-        mostrar("Nodo eliminado correctamente.");
-        txtDatos.setText("");
+        boolean tieneHijos =
+                nodo.getIzquierdo() != null ||
+                        nodo.getDerecho() != null;
+
+        boolean eliminado = false;
+
+        if (!tieneHijos) {
+            // Nodo hoja
+            eliminado = controller.eliminarBinario(valor);
+        }
+        else {
+
+            Object[] opciones = {"Podar rama", "Eliminar solo nodo"};
+
+            int eleccion = JOptionPane.showOptionDialog(
+                    PanelPrincipal,
+                    "¿Como desea eliminar?",
+                    "Eliminar",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opciones,
+                    opciones[0]
+            );
+
+            if (eleccion == -1) return;
+
+            boolean podar = (eleccion == 0);
+
+            eliminado = controller.eliminarBinario(valor, podar);
+        }
+
+        if (eliminado) {
+            actualizarArbol();
+            mostrar("Nodo eliminado correctamente.");
+            txtDatos.setText("");
+        }
     }
 
     private void altura() {
@@ -237,6 +299,7 @@ public class ArbolBinarioForm
         if (confirm == JOptionPane.YES_OPTION) {
             controller.reset();
             ViewArbol.setModel(null);
+            txtConsola.setText("");
             mostrar("Se ha borrado el arbol.");
         }
     }

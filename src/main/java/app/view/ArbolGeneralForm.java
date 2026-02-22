@@ -50,8 +50,6 @@ public class ArbolGeneralForm
         btnRecorridos.addActionListener(e -> iniciarRecorridos());
         btnLimpiar.addActionListener(e -> limpiarUI());
         btnEquilibrio.addActionListener(e -> obtenerEquilibrio());
-        controller.reset();
-        ViewArbol.setModel(null);
     }
 
     private boolean arbolVacio() {

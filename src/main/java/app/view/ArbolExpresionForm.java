@@ -31,6 +31,7 @@ public class ArbolExpresionForm
     public ArbolExpresionForm(ArbolController controller) {
         this.controller = controller;
         PanelPrincipal.setPreferredSize(new Dimension(900, 600));
+        ViewArbol.setModel(null);
         btnInsertar.addActionListener(e -> agregar());
         txtDatos.addActionListener(e -> agregar()); // ENTER ejecuta también
 
