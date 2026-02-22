@@ -6,6 +6,7 @@ import app.core.models.NodoBinario;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class ArbolExpresionForm
 
     public ArbolExpresionForm(ArbolController controller) {
         this.controller = controller;
-
+        PanelPrincipal.setPreferredSize(new Dimension(900, 600));
         btnInsertar.addActionListener(e -> agregar());
         txtDatos.addActionListener(e -> agregar()); // ENTER ejecuta también
 
