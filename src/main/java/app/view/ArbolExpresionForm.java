@@ -15,4 +15,5 @@ public class ArbolExpresionForm {
     private JTextField txtConsola;
     private JTree ViewArbol;
     private JPanel PanelPrincipal;
+    private JButton btnLimpiar;
 }

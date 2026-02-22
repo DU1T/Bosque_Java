@@ -19,4 +19,5 @@ public class ArbolBinarioForm {
     private JLabel lblConsola;
     private JTree ViewArbol;
     private JPanel PanelPrincipal;
+    private JButton btnLimpiar;
 }
