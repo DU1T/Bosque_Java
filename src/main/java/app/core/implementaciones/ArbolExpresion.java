@@ -49,26 +49,42 @@ public class ArbolExpresion
 
     //Evaluacion matematica
     public double evaluar() {
-        if (raiz == null) throw new IllegalStateException("El arbol está vacio.");
+        if (raiz == null) {
+            throw new IllegalStateException("El arbol esta vacio.");
+        }
         return evaluarRecursivo(raiz);
     }
-    private double evaluarRecursivo(NodoBinario<String> nodo) {
-        if (nodo == null) return 0;
 
+    private double evaluarRecursivo(NodoBinario<String> nodo) {
+
+        // Si es hoja -> es numero
         if (nodo.getIzquierdo() == null && nodo.getDerecho() == null) {
             return Double.parseDouble(nodo.getDato());
         }
 
-        double izq = evaluarRecursivo(nodo.getIzquierdo());
-        double der = evaluarRecursivo(nodo.getDerecho());
+        double izquierda = evaluarRecursivo(nodo.getIzquierdo());
+        double derecha = evaluarRecursivo(nodo.getDerecho());
 
-        switch (nodo.getDato()) {
-            case "+": return izq + der;
-            case "-": return izq - der;
-            case "*": return izq * der;
-            case "/": return izq / der;
+        String operador = nodo.getDato();
+
+        switch (operador) {
+            case "+":
+                return izquierda + derecha;
+
+            case "-":
+                return izquierda - derecha;
+
+            case "*":
+                return izquierda * derecha;
+
+            case "/":
+                if (derecha == 0) {
+                    throw new ArithmeticException("Division entre cero detectada.");
+                }
+                return izquierda / derecha;
+
             default:
-                throw new IllegalArgumentException("Operador desconocido: " + nodo.getDato());
+                throw new IllegalArgumentException("Operador desconocido: " + operador);
         }
     }
 

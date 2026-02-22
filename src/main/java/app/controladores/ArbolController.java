@@ -1,6 +1,7 @@
 package app.controladores;
 
 import app.core.implementaciones.*;
+import app.core.models.NodoBinario;
 import app.core.recorridos.*;
 import app.helpers.ParserEnteros;
 import app.helpers.ManejadorCSV;
@@ -89,12 +90,28 @@ public class ArbolController
                 break;
         }
     }
-    public void eliminarBinario(int valor) {
-        arbolBinario.eliminar(valor);
+    public boolean eliminarBinario(int valor)
+    {
+        return arbolBinario.eliminar(valor);
     }
 
     public boolean buscarBinario(int valor) {
         return arbolBinario.buscar(valor) != null;
+    }
+
+    public int getFrecuenciaBinario(int valor) {
+        NodoBinario<Integer> nodo = arbolBinario.buscar(valor);
+        return nodo != null ? nodo.getFrecuencia() : -1;
+    }
+    public boolean estaVacioBinario() {
+        return arbolBinario.getRaiz() == null;
+    }
+
+    public String getTipoEquilibrioBinario() {
+        if (arbolBinario == null || arbolBinario.getRaiz() == null) {
+            return "Arbol vacio";
+        }
+        return arbolBinario.obtenerTipoEquilibrio();
     }
 
     public List<Integer> getPreordenBinario() {
@@ -177,6 +194,22 @@ public class ArbolController
 
     public double evaluarExpresion() {
         return arbolExpresion.evaluar();
+    }
+
+    public void construirExpresion(String expresion) {
+        arbolExpresion.construirDesdeExpresion(expresion);
+    }
+
+    public boolean estaVacioExpresion() {
+        return arbolExpresion.getRaiz() == null;
+    }
+
+    public Map<Integer, List<String>> getNivelesExpresion() {
+        return arbolExpresion.obtenerNiveles();
+    }
+
+    public NodoBinario<String> getRaizExpresion() {
+        return arbolExpresion.getRaiz(); // si decides mantener acceso como en binario
     }
 
     // GETTERS
